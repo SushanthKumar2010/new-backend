@@ -10,7 +10,7 @@ if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not set")
 
 client = genai.Client(api_key=GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-pro"  # Free tier model
+MODEL_NAME = "gemini-2.5-flash-lite"  # Free tier model
 
 # ---------------- Allowed Subjects ----------------
 ALLOWED_SUBJECTS = [
@@ -124,5 +124,6 @@ async def ask_ap_ssc(payload: AskRequest):
             "chapter": payload.chapter
         }
     )
+
 
 
