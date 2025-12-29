@@ -78,13 +78,13 @@ Chapter: {payload.chapter}
 Student Question:
 \"\"\"{payload.question}\"\"\"  
 
-Instructions: 1. Answer strictly as per **AP SSC Class 10 syllabus** 
-2. Use **simple language suitable for SSC students** 
-3. Write **step-by-step solutions** 
-4. Follow **SSC exam answer-writing style** 
-5. Highlight **important points for marks** 
-6. Mention **common mistakes students make** 
-7. Structure the answer clearly with headings if needed 
+Instructions:
+1. Give a clear, step-by-step solution
+2. Use Andhra Pradesh SSC Class 10 methods
+3. Show proper working where needed
+4. Mention common exam mistakes
+5. Keep the answer structured & exam-oriented
+6. Use paragraphs and spacing clearly
 """.strip()
 
     try:
