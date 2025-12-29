@@ -56,7 +56,9 @@ INSTRUCTIONS:
 4. Social: include dates & key terms
 5. Mention common exam mistakes
 6. Exam-oriented (4–8 marks answer)
-7. If outside syllabus, say so politely
+7. Always use rupees symbol (instead of dollar) while the topic is related to money
+8. generate the output with proper spacing and indentations (paragraph wise)
+9. If outside syllabus, say so politely
 """.strip()
 
 # ---------------- App Init ----------------
@@ -124,6 +126,7 @@ async def ask_ap_ssc(payload: AskRequest):
             "chapter": payload.chapter
         }
     )
+
 
 
 
