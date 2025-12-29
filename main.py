@@ -29,7 +29,7 @@ CHAPTERS = {
     ],
     "Science": [
         "Chemical Reactions", "Acids & Bases", "Metals & Non-metals",
-        "Carbon Compounds", "Life Processes", "Control & Coordination"
+        "Carbon Compounds", "Life Processes", "Control & Coordination","Light (Reflection & Refraction, Human Eye)", "Electricity (Current, Potential, Circuits)", "Magnetic Effects of Electric Current", "Sources of Energy"
     ],
     "Social Studies": [
         "Nationalism in India", "Industrialization", "Post-War World",
@@ -124,6 +124,7 @@ async def ask_ap_ssc(payload: AskRequest):
             "chapter": payload.chapter
         }
     )
+
 
 
 
