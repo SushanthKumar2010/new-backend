@@ -10,7 +10,9 @@ if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not set")
 
 client = genai.Client(api_key=GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-flash-lite"  # Free tier model
+
+# ✅ STABLE FREE-TIER MODEL
+MODEL_NAME = "gemini-1.5-flash"
 
 # ---------------- Allowed Subjects ----------------
 ALLOWED_SUBJECTS = [
@@ -29,7 +31,11 @@ CHAPTERS = {
     ],
     "Science": [
         "Chemical Reactions", "Acids & Bases", "Metals & Non-metals",
-        "Carbon Compounds", "Life Processes", "Control & Coordination","Light (Reflection & Refraction, Human Eye)", "Electricity (Current, Potential, Circuits)", "Magnetic Effects of Electric Current", "Sources of Energy"
+        "Carbon Compounds", "Life Processes", "Control & Coordination",
+        "Light (Reflection & Refraction, Human Eye)",
+        "Electricity (Current, Potential, Circuits)",
+        "Magnetic Effects of Electric Current",
+        "Sources of Energy"
     ],
     "Social Studies": [
         "Nationalism in India", "Industrialization", "Post-War World",
@@ -56,8 +62,8 @@ INSTRUCTIONS:
 4. Social: include dates & key terms
 5. Mention common exam mistakes
 6. Exam-oriented (4–8 marks answer)
-7. Always use rupees symbol (instead of dollar) while the topic is related to money
-8. generate the output with proper spacing and indentations (paragraph wise)
+7. Use ₹ symbol for money
+8. Proper spacing & paragraphs
 9. If outside syllabus, say so politely
 """.strip()
 
@@ -114,9 +120,22 @@ async def ask_ap_ssc(payload: AskRequest):
             model=MODEL_NAME,
             contents=prompt
         )
-        answer = (response.text or "").strip()
+
+        # ✅ SAFE EXTRACTION
+        answer = ""
+        if response and response.candidates:
+            parts = response.candidates[0].content.parts
+            if parts:
+                answer = parts[0].text.strip()
+
+        if not answer:
+            raise ValueError("Empty response from AI")
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI generation failed: {str(e)}"
+        )
 
     return AskResponse(
         answer=answer,
@@ -126,8 +145,3 @@ async def ask_ap_ssc(payload: AskRequest):
             "chapter": payload.chapter
         }
     )
-
-
-
-
-
