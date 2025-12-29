@@ -10,7 +10,7 @@ if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not set")
 
 client = genai.Client(api_key=GEMINI_API_KEY)
-MODEL_NAME = "gemini-2.5-flash-lite"  # Free tier model
+MODEL_NAME = "gemini-2.5-flash-lite"
 
 # ---------------- Allowed Subjects ----------------
 ALLOWED_SUBJECTS = [
@@ -39,8 +39,28 @@ CHAPTERS = {
 
 # ---------------- Prompt Builder ----------------
 def build_ap_prompt(class_level: str, subject: str, chapter: str, question: str) -> str:
-    return f"""
-You are an expert AP SSC (Andhra Pradesh State Board) Class 10 tutor.
+    return f"""You are an expert AP SSC Class 10 tutor. Format answers cleanly with:
+
+## Main Title
+**Definition:** Clear explanation
+**Formula:** Show equation clearly  
+**Key Points:**
+- Bullet 1
+- Bullet 2
+
+**Examples:**
+1. Example 1
+2. Example 2
+
+**Real Life Uses:**
+- Application 1
+- Application 2
+
+**Common Exam Mistakes:**
+- Mistake 1 explanation
+- Mistake 2 explanation
+
+Keep answers 4-8 marks length. Use simple Telugu-English mix if needed.
 
 BOARD: AP SSC Class 10
 SUBJECT: {subject}
@@ -49,15 +69,7 @@ CHAPTER: {chapter}
 Student Question:
 {question}
 
-INSTRUCTIONS:
-1. Follow AP SSC 2025–26 syllabus only
-2. Use simple Telugu-English mix if needed
-3. Maths/Science: show all steps clearly
-4. Social: include dates & key terms
-5. Mention common exam mistakes
-6. Exam-oriented (4–8 marks answer)
-7. If outside syllabus, say so politely
-""".strip()
+Follow AP SSC 2025–26 syllabus only.""".strip()
 
 # ---------------- App Init ----------------
 app = FastAPI(title="AP SSC Class 10 AI Tutor")
@@ -87,7 +99,6 @@ def health():
 
 @app.post("/api/ask", response_model=AskResponse)
 async def ask_ap_ssc(payload: AskRequest):
-
     if payload.subject not in ALLOWED_SUBJECTS:
         raise HTTPException(
             status_code=400,
