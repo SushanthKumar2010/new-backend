@@ -47,6 +47,7 @@ class AskRequest(BaseModel):
     chapter: str = "General"
     question: str
 
+
 class AskResponse(BaseModel):
     answer: str
     meta: dict
@@ -59,9 +60,11 @@ class AskResponse(BaseModel):
 def root():
     return {"status": "Backend running ✅"}
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.post("/api/ask", response_model=AskResponse)
 async def ask_icse_question(payload: AskRequest):
@@ -86,7 +89,6 @@ Instructions:
 5. Mention common mistakes students make
 6. Structure the answer for maximum marks
 7. Use simple language suitable for Class 10 students
-""".strip()
 """.strip()
 
     try:
@@ -118,4 +120,3 @@ Instructions:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
-
