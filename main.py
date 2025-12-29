@@ -80,7 +80,7 @@ Student Question:
 
 Instructions:
 1. Give a clear, step-by-step solution
-2. Use ICSE Class 10 methods
+2. Use Andhra Pradesh SSC Class 10 methods
 3. Show proper working where needed
 4. Mention common exam mistakes
 5. Keep the answer structured & exam-oriented
@@ -116,5 +116,6 @@ Instructions:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
 
