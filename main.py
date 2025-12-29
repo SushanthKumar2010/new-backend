@@ -1,74 +1,27 @@
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from google import genai
 
-# ---------------- Environment ----------------
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# ======================
+# CONFIG
+# ======================
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not set")
 
-client = genai.Client(api_key=GEMINI_API_KEY)
-
-# ✅ STABLE FREE-TIER MODEL
 MODEL_NAME = "gemini-1.5-flash"
 
-# ---------------- Allowed Subjects ----------------
-ALLOWED_SUBJECTS = [
-    "Telugu", "English", "Hindi",
-    "Mathematics", "Science", "Social Studies"
-]
+# ======================
+# APP SETUP
+# ======================
 
-CHAPTERS = {
-    "Telugu": ["కథలు", "కవిత్వం", "వ్యాకరణం"],
-    "English": ["Prose", "Poetry", "Grammar"],
-    "Hindi": ["गद्य", "पद्य", "व्याकरण"],
-    "Mathematics": [
-        "Real Numbers", "Polynomials", "Pair of Linear Equations",
-        "Quadratic Equations", "Arithmetic Progressions",
-        "Triangles", "Coordinate Geometry"
-    ],
-    "Science": [
-        "Chemical Reactions", "Acids & Bases", "Metals & Non-metals",
-        "Carbon Compounds", "Life Processes", "Control & Coordination",
-        "Light (Reflection & Refraction, Human Eye)",
-        "Electricity (Current, Potential, Circuits)",
-        "Magnetic Effects of Electric Current",
-        "Sources of Energy"
-    ],
-    "Social Studies": [
-        "Nationalism in India", "Industrialization", "Post-War World",
-        "Citizenship", "Economic Development"
-    ]
-}
-
-# ---------------- Prompt Builder ----------------
-def build_ap_prompt(class_level: str, subject: str, chapter: str, question: str) -> str:
-    return f"""
-You are an expert AP SSC (Andhra Pradesh State Board) Class 10 tutor.
-
-BOARD: AP SSC Class 10
-SUBJECT: {subject}
-CHAPTER: {chapter}
-
-Student Question:
-{question}
-
-INSTRUCTIONS:
-1. Follow AP SSC 2025–26 syllabus only
-2. Use simple Telugu-English mix if needed
-3. Maths/Science: show all steps clearly
-4. Social: include dates & key terms
-5. Mention common exam mistakes
-6. Exam-oriented (4–8 marks answer)
-7. Use ₹ symbol for money
-8. Proper spacing & paragraphs
-9. If outside syllabus, say so politely
-""".strip()
-
-# ---------------- App Init ----------------
-app = FastAPI(title="AP SSC Class 10 AI Tutor")
+app = FastAPI(
+    title="ICSE AI Tutor",
+    description="FastAPI backend for ICSE Class 10 tutor using Gemini",
+    version="1.0.0",
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -77,71 +30,92 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------------- Schemas ----------------
-class AskRequest(BaseModel):
-    class_level: str = "10"
-    subject: str
-    chapter: str
-    question: str
+# ======================
+# GEMINI CLIENT (NEW SDK)
+# ======================
 
-class AskResponse(BaseModel):
-    answer: str
-    meta: dict
+client = genai.Client(api_key=GEMINI_API_KEY)
 
-# ---------------- Routes ----------------
+# ======================
+# ROUTES
+# ======================
+
+@app.get("/")
+def root():
+    return {"status": "Backend running ✅"}
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-@app.post("/api/ask", response_model=AskResponse)
-async def ask_ap_ssc(payload: AskRequest):
-
-    if payload.subject not in ALLOWED_SUBJECTS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Subject must be one of {ALLOWED_SUBJECTS}"
-        )
-
-    if payload.chapter not in CHAPTERS.get(payload.subject, []):
-        raise HTTPException(
-            status_code=400,
-            detail="Chapter not supported for this subject"
-        )
-
-    prompt = build_ap_prompt(
-        payload.class_level,
-        payload.subject,
-        payload.chapter,
-        payload.question
-    )
+@app.post("/api/chat")
+def simple_chat(data: dict):
+    prompt = (data.get("prompt") or "").strip()
+    if not prompt:
+        raise HTTPException(status_code=400, detail="Prompt is required")
 
     try:
         response = client.models.generate_content(
             model=MODEL_NAME,
-            contents=prompt
+            contents=prompt,
         )
-
-        # ✅ SAFE EXTRACTION
-        answer = ""
-        if response and response.candidates:
-            parts = response.candidates[0].content.parts
-            if parts:
-                answer = parts[0].text.strip()
-
-        if not answer:
-            raise ValueError("Empty response from AI")
-
+        return {"response": response.text}
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"AI generation failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return AskResponse(
-        answer=answer,
-        meta={
-            "class_level": payload.class_level,
-            "subject": payload.subject,
-            "chapter": payload.chapter
-        }
-    )
+@app.post("/api/ask")
+def ask_icse_question(payload: dict):
+    class_level = (payload.get("class_level") or "10").strip()
+    subject = (payload.get("subject") or "General").strip()
+    chapter = (payload.get("chapter") or "General").strip()
+    question = (payload.get("question") or "").strip()
+
+    if not question:
+        raise HTTPException(status_code=400, detail="Question is required")
+
+    prompt = f"""
+You are an expert ICSE Class {class_level} tutor.
+
+Subject: {subject}
+Chapter: {chapter}
+
+Student Question:
+\"\"\"{question}\"\"\"  
+
+Requirements:
+- Give a clear, step-by-step solution.
+- Use ICSE Class 10 level language and methods.
+- Show all important working (for Maths/Physics/Chem).
+- Mention common mistakes if relevant.
+- Keep the answer structured and exam-focused.
+"""
+
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt,
+        )
+        answer = (response.text or "I could not generate an answer.").strip()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Gemini error: {e}")
+
+    return {
+        "answer": answer,
+        "meta": {
+            "class_level": class_level,
+            "subject": subject,
+            "chapter": chapter,
+        },
+    }
+
+# ======================
+# LOCAL DEV ONLY
+# ======================
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
+
+
+
+
