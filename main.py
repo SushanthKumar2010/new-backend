@@ -79,12 +79,14 @@ Student Question:
 \"\"\"{payload.question}\"\"\"  
 
 Instructions:
-1. Give a clear, step-by-step solution
-2. Use Andhra Pradesh SSC Class 10 methods
-3. Show proper working where needed
-4. Mention common exam mistakes
-5. Keep the answer structured & exam-oriented
-6. Use paragraphs and spacing clearly
+1. Explain concepts clearly as per AP SSC syllabus
+2. Provide step-by-step solutions
+3. Show proper calculations and working
+4. Use AP SSC exam-oriented methods
+5. Mention common mistakes students make
+6. Structure the answer for maximum marks
+7. Use simple language suitable for Class 10 students
+""".strip()
 """.strip()
 
     try:
@@ -116,3 +118,4 @@ Instructions:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
