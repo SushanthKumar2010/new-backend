@@ -19,8 +19,8 @@ MODEL_NAME = "gemini-2.5-flash-lite"
 # ======================
 
 app = FastAPI(
-    title="AP SSC Class 10 AI Tutor",
-    description="FastAPI backend for Andhra Pradesh SSC Class 10 student tutor using Gemini",
+    title="ICSE AI Tutor",
+    description="FastAPI backend for Andhra Pradesh SSC Class 10 tutor using Gemini",
     version="1.1.0",
 )
 
@@ -57,20 +57,20 @@ class AskResponse(BaseModel):
 
 @app.get("/")
 def root():
-    return {"status": "AP SSC Backend running ✅"}
+    return {"status": "Backend running ✅"}
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 @app.post("/api/ask", response_model=AskResponse)
-async def ask_apssc_question(payload: AskRequest):
+async def ask_icse_question(payload: AskRequest):
 
     if not payload.question.strip():
         raise HTTPException(status_code=400, detail="Question is required")
 
     prompt = f"""
-You are an expert **Andhra Pradesh SSC Class {payload.class_level} teacher**.
+You are an expert ICSE Class {payload.class_level} tutor.
 
 Subject: {payload.subject}
 Chapter: {payload.chapter}
@@ -78,14 +78,13 @@ Chapter: {payload.chapter}
 Student Question:
 \"\"\"{payload.question}\"\"\"  
 
-Instructions:
-1. Answer strictly as per **AP SSC Class 10 syllabus**
-2. Use **simple language suitable for SSC students**
-3. Write **step-by-step solutions**
-4. Follow **SSC exam answer-writing style**
-5. Highlight **important points for marks**
-6. Mention **common mistakes students make**
-7. Structure the answer clearly with headings if needed
+Instructions: 1. Answer strictly as per **AP SSC Class 10 syllabus** 
+2. Use **simple language suitable for SSC students** 
+3. Write **step-by-step solutions** 
+4. Follow **SSC exam answer-writing style** 
+5. Highlight **important points for marks** 
+6. Mention **common mistakes students make** 
+7. Structure the answer clearly with headings if needed 
 """.strip()
 
     try:
@@ -104,7 +103,6 @@ Instructions:
     return AskResponse(
         answer=answer,
         meta={
-            "board": "AP SSC",
             "class_level": payload.class_level,
             "subject": payload.subject,
             "chapter": payload.chapter,
