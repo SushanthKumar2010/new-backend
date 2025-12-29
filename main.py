@@ -20,7 +20,7 @@ MODEL_NAME = "gemini-2.5-flash-lite"
 
 app = FastAPI(
     title="ICSE AI Tutor",
-    description="FastAPI backend for ICSE Class 10 tutor using Gemini",
+    description="FastAPI backend for Andhra Pradesh SSC Class 10 tutor using Gemini",
     version="1.1.0",
 )
 
@@ -116,6 +116,7 @@ Instructions:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
 
 
