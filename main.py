@@ -83,26 +83,31 @@ Chapter: {payload.chapter}
 Student Question:
 \"\"\"{payload.question.strip()}\"\"\"  
 
-STRICT ANSWERING RULES (MUST FOLLOW):
-1. Use ONLY plain text (NO LaTeX, NO $, NO symbols like ^, /, = unless absolutely necessary)
-2. Write angles in words (example: 30 degrees, not 30° or 30^)
-3. Write fractions in words (example: one by two, not 1/2)
-4. Use simple CBSE Class 10 language
+STRICT ANSWERING RULES (VERY IMPORTANT):
+1. Use plain text only (NO LaTeX, NO $ symbols, NO backslashes)
+2. Use ONLY necessary math symbols:
+   - Degrees: 30°
+   - Fractions: 1/2
+   - Equals sign: =
+   - Plus / minus: + −
+3. Do NOT use LaTeX-style commands like \\sin, \\frac, ^, _
+4. Write math in normal school style (example: sin 30° = 1/2)
 5. Keep the answer SHORT but CONCEPTUALLY DEEP
-6. Prefer bullet points with simple words (* or - only)
-7. Explain the core idea first
-8. Add ONE simple example if helpful
-9. Avoid unnecessary theory or repetition
+6. Use simple CBSE Class 10 language
+7. Prefer short bullet points or small paragraphs
+8. Explain the core idea first
+9. Add ONE simple example or value if useful
 10. Be NCERT and exam-oriented
 11. Do NOT use emojis
-12. Do NOT mention AI, Gemini, LaTeX, or formatting terms
+12. Do NOT mention AI or formatting rules
 
 Preferred Structure:
 - Core idea
 - Explanation (2 to 4 lines)
-- Final value or result (in words)
+- Final result or value
 - Key exam point
 """.strip()
+
 
 
     print("📩 Question received:", payload.question)
@@ -151,4 +156,5 @@ Preferred Structure:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
