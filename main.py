@@ -100,6 +100,7 @@ STRICT ANSWERING RULES (VERY IMPORTANT):
 10. Be NCERT and exam-oriented
 11. Do NOT use emojis
 12. Do NOT mention AI or formatting rules
+13. Generate output in selected language ( like hindi = hindi, telugu = telugu, english = english = other subjects)
 
 Preferred Structure:
 - Core idea
@@ -156,5 +157,6 @@ Preferred Structure:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
 
