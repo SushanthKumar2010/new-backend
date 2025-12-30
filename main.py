@@ -83,24 +83,27 @@ Chapter: {payload.chapter}
 Student Question:
 \"\"\"{payload.question.strip()}\"\"\"  
 
-Answering Rules (VERY IMPORTANT):
-1. Use simple CBSE Class 10 language
-2. Keep the answer SHORT but CONCEPTUALLY DEEP
-3. Prefer bullet points or short paragraphs
-4. Explain the core idea first
-5. Add ONE simple example if helpful
-6. Avoid unnecessary theory or repetition
-7. Be exam-oriented (NCERT based)
-8. Use ₹ symbol instead of $ if money is involved
-9. Do NOT use emojis
-10. Do NOT mention AI or Gemini
+STRICT ANSWERING RULES (MUST FOLLOW):
+1. Use ONLY plain text (NO LaTeX, NO $, NO symbols like ^, /, = unless absolutely necessary)
+2. Write angles in words (example: 30 degrees, not 30° or 30^)
+3. Write fractions in words (example: one by two, not 1/2)
+4. Use simple CBSE Class 10 language
+5. Keep the answer SHORT but CONCEPTUALLY DEEP
+6. Prefer bullet points with simple words (* or - only)
+7. Explain the core idea first
+8. Add ONE simple example if helpful
+9. Avoid unnecessary theory or repetition
+10. Be NCERT and exam-oriented
+11. Do NOT use emojis
+12. Do NOT mention AI, Gemini, LaTeX, or formatting terms
 
-Structure (follow if applicable):
-• Definition / Key idea  
-• Explanation (2–4 lines max)  
-• Example / Formula (if needed)  
-• Key exam point
+Preferred Structure:
+- Core idea
+- Explanation (2 to 4 lines)
+- Final value or result (in words)
+- Key exam point
 """.strip()
+
 
     print("📩 Question received:", payload.question)
 
@@ -148,3 +151,4 @@ Structure (follow if applicable):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
