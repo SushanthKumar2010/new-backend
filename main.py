@@ -83,9 +83,8 @@ Student Question:
 \"\"\"{payload.question.strip()}\"\"\"  
 
 Instructions:
-1. Explain concepts clearly as per AP SSC syllabus
-2. Use simple Class 10 language
-3. Always use ₹ symbol instead of $ (what ever the topic is)
+1. Use simple Class 10 language
+2. Always use ₹ symbol instead of $ (what ever the topic is)
 """.strip()
 
     print("📩 Question received:", payload.question)
@@ -136,6 +135,7 @@ Instructions:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
 
 
