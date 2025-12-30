@@ -90,7 +90,7 @@ Instructions:
 5. Mention common mistakes
 6. Structure the answer for maximum marks
 7. Use simple Class 10 language
-8. Use ₹ symbol instead of $
+8. Always use ₹ symbol instead of $ (when the topic is about money)
 """.strip()
 
     print("📩 Question received:", payload.question)
@@ -141,4 +141,5 @@ Instructions:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
