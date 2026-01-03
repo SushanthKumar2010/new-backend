@@ -101,6 +101,7 @@ STRICT ANSWERING RULES (VERY IMPORTANT):
 11. Do NOT use emojis
 12. Do NOT mention AI or formatting rules
 13. Generate output in selected language ( like hindi = hindi, telugu = telugu, english = english = other subjects)
+14. use √ instead of sqrt
 
 Preferred Structure:
 - Core idea
@@ -157,6 +158,7 @@ Preferred Structure:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=10000)
+
 
 
 
